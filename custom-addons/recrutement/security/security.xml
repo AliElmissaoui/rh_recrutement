@@ -1,0 +1,73 @@
+<odoo>
+
+
+    <record id="module_category_recruitment" model="ir.module.category">
+        <field name="name">Recruitment</field>
+        <field name="description">
+            Recruitment management and workflow permissions.
+        </field>
+        <field name="sequence">30</field>
+    </record>
+
+
+    <!-- Directeur d'entité -->
+    <record id="group_recruitment_directeur_entite" model="res.groups">
+        <field name="name">Directeur d'entité</field>
+        <field name="category_id" ref="module_category_recruitment"/>
+    </record>
+
+
+    <!-- Chef de service -->
+    <record id="group_recruitment_chef_service" model="res.groups">
+        <field name="name">Chef de service</field>
+        <field name="category_id" ref="module_category_recruitment"/>
+    </record>
+
+
+    <!-- RH -->
+    <record id="group_recruitment_rh" model="res.groups">
+        <field name="name">RH</field>
+        <field name="category_id" ref="module_category_recruitment"/>
+    </record>
+
+
+    <!-- DRH -->
+    <record id="group_recruitment_drh" model="res.groups">
+        <field name="name">DRH</field>
+        <field name="category_id" ref="module_category_recruitment"/>
+    </record>
+
+
+    <!-- DG -->
+    <record id="group_recruitment_dg" model="res.groups">
+        <field name="name">DG</field>
+        <field name="category_id" ref="module_category_recruitment"/>
+    </record>
+
+
+    <!-- Chargé de recrutement -->
+    <record id="group_recruitment_charge_recrutement" model="res.groups">
+        <field name="name">Chargé de recrutement</field>
+        <field name="category_id" ref="module_category_recruitment"/>
+    </record>
+
+
+    <!-- CHS Développement RH -->
+    <record id="group_recruitment_chs_developpement_rh" model="res.groups">
+        <field name="name">CHS Développement RH</field>
+        <field name="category_id" ref="module_category_recruitment"/>
+    </record>
+
+
+    <!-- Agent RH -->
+    <record id="group_recruitment_agent_rh" model="res.groups">
+        <field name="name">Agent RH</field>
+        <field name="category_id" ref="module_category_recruitment"/>
+    </record>
+
+
+
+
+
+
+</odoo>

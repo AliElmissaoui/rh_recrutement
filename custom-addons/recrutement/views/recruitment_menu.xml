@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <!-- ROOT -->
+    <menuitem
+        id="menu_recruitment_root"
+        name="Gestion Recrutement"
+        sequence="10"/>
+
+    <!-- PLANIFICATION -->
+    <menuitem
+        id="menu_recruitment_planning_root"
+        name="Planification"
+        parent="menu_recruitment_root"
+        sequence="10"/>
+
+    <!-- PLANIFICATIONS -->
+    <menuitem
+        id="menu_recruitment_planning"
+        name="Planifications"
+        parent="menu_recruitment_planning_root"
+        action="action_recruitment_planning_header"
+        sequence="10"/>
+
+    
+    
+
+</odoo>
