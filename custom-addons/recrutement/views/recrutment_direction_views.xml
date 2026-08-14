@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <!-- ===================================================== -->
+    <!-- DIRECTION LIST -->
+    <!-- ===================================================== -->
+
+    <record id="view_recruitment_direction_list" model="ir.ui.view">
+
+        <field name="name">recruitment.direction.list</field>
+        <field name="model">recruitment.direction</field>
+
+        <field name="arch" type="xml">
+
+            <list string="Directions">
+
+                <field name="name"/>
+
+                <field name="director_id"/>
+
+                <field name="active"/>
+
+            </list>
+
+        </field>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- DIRECTION FORM -->
+    <!-- ===================================================== -->
+
+    <record id="view_recruitment_direction_form"
+            model="ir.ui.view">
+
+        <field name="name">recruitment.direction.form</field>
+
+        <field name="model">recruitment.direction</field>
+
+        <field name="arch" type="xml">
+
+            <form string="Direction">
+
+                <sheet>
+
+                    <div class="oe_title">
+
+                        <label for="name"/>
+
+                        <h1>
+                            <field name="name"
+                                   placeholder="Ex: Direction RH"/>
+                        </h1>
+
+                    </div>
+
+
+                    <group>
+
+                        <group string="Informations">
+
+                            <field name="name"/>
+
+                            <field name="director_id"/>
+
+                            <field name="active"/>
+
+                        </group>
+
+                    </group>
+
+
+                    <notebook>
+
+                        <page string="Projets">
+
+                            <field name="project_ids"
+                                   readonly="1">
+
+                                <list>
+
+                                    <field name="name"/>
+
+                                    <field name="owner_type"/>
+
+                                    <field name="chef_service_id"/>
+
+                                    <field name="director_id"/>
+
+                                    <field name="active"/>
+
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+            </form>
+
+        </field>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- DIRECTION SEARCH -->
+    <!-- ===================================================== -->
+
+    <record id="view_recruitment_direction_search"
+            model="ir.ui.view">
+
+        <field name="name">recruitment.direction.search</field>
+
+        <field name="model">recruitment.direction</field>
+
+        <field name="arch" type="xml">
+
+            <search string="Rechercher une direction">
+
+                <field name="name"/>
+
+                <field name="director_id"/>
+
+
+                <separator/>
+
+
+                <filter
+                    name="filter_active"
+                    string="Actives"
+                    domain="[('active', '=', True)]"/>
+
+                <filter
+                    name="filter_archived"
+                    string="Archivées"
+                    domain="[('active', '=', False)]"/>
+
+
+                <separator/>
+
+
+                <group string="Grouper par">
+
+                    <filter
+                        name="group_director"
+                        string="Directeur"
+                        context="{'group_by': 'director_id'}"/>
+
+                </group>
+
+            </search>
+
+        </field>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- DIRECTION ACTION -->
+    <!-- ===================================================== -->
+
+    <record id="action_recruitment_direction"
+            model="ir.actions.act_window">
+
+        <field name="name">Directions</field>
+
+        <field name="res_model">recruitment.direction</field>
+
+        <field name="view_mode">list,form</field>
+
+        <field name="search_view_id"
+               ref="view_recruitment_direction_search"/>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- DIRECTION MENU -->
+    <!-- ===================================================== -->
+
+    
+
+</odoo>

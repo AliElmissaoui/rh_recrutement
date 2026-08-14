@@ -35,20 +35,62 @@ class RecruitmentPlanningHeader(models.Model):
     )
 
     # =========================================================
-    # GENERAL
+    # PROJECT
     # =========================================================
 
-    entity_id = fields.Many2one(
-        'res.company',
-        string='Entité',
+    project_id = fields.Many2one(
+        'recruitment.project',
+        string='Projet',
         required=True,
-        default=lambda self: self.env.company,
+        ondelete='restrict',
+    )
+
+    # =========================================================
+    # PROJECT INFORMATION
+    # Automatically inherited from project
+    # =========================================================
+
+    owner_type = fields.Selection(
+        related='project_id.owner_type',
+        string='Responsable du projet',
+        store=True,
+        readonly=True,
+    )
+
+    chef_service_id = fields.Many2one(
+        'res.users',
+        string='Chef de service',
+        related='project_id.chef_service_id',
+        store=True,
+        readonly=True,
+    )
+
+    direction_id = fields.Many2one(
+        'recruitment.direction',
+        string='Direction',
+        related='project_id.direction_id',
+        store=True,
+        readonly=True,
     )
 
     director_id = fields.Many2one(
         'res.users',
         string="Directeur d'entité",
-        required=True,
+        related='project_id.director_id',
+        store=True,
+        readonly=True,
+    )
+
+    # =========================================================
+    # DATES
+    # =========================================================
+
+    date_start = fields.Date(
+        string='Date début',
+    )
+
+    date_end = fields.Date(
+        string='Date fin',
     )
 
     # =========================================================
@@ -68,6 +110,7 @@ class RecruitmentPlanningHeader(models.Model):
         string='État',
         default='draft',
         required=True,
+        tracking=True,
     )
 
     # =========================================================
@@ -81,7 +124,7 @@ class RecruitmentPlanningHeader(models.Model):
     )
 
     # =========================================================
-    # TOTAL PLANIFIÉ
+    # TOTAL PLANNED
     # =========================================================
 
     total_planned = fields.Integer(
@@ -92,16 +135,20 @@ class RecruitmentPlanningHeader(models.Model):
     )
 
     # =========================================================
-    # COÛT SALARIAL ANNUEL
+    # CURRENCY
     # =========================================================
 
     currency_id = fields.Many2one(
         'res.currency',
         string='Devise',
-        related='entity_id.currency_id',
+        related='project_id.direction_id.director_id.company_id.currency_id',
         store=True,
         readonly=True,
     )
+
+    # =========================================================
+    # ANNUAL SALARY COST
+    # =========================================================
 
     annual_salary_cost = fields.Float(
         string='Coût salarial annuel total',
@@ -111,7 +158,7 @@ class RecruitmentPlanningHeader(models.Model):
     )
 
     # =========================================================
-    # VALIDATION DG
+    # DG VALIDATION
     # =========================================================
 
     dg_validator_id = fields.Many2one(
@@ -126,7 +173,7 @@ class RecruitmentPlanningHeader(models.Model):
     )
 
     # =========================================================
-    # VALIDATION DRH
+    # DRH VALIDATION
     # =========================================================
 
     drh_validator_id = fields.Many2one(
@@ -166,11 +213,11 @@ class RecruitmentPlanningHeader(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('ref', 'PLA') == 'PLA':
-            vals['ref'] = self.env[
-                'ir.sequence'
-            ].next_by_code(
-                'recruitment.planning.header'
-            ) or 'PLA'
+            vals['ref'] = (
+                self.env['ir.sequence'].next_by_code(
+                    'recruitment.planning.header'
+                ) or 'PLA'
+            )
 
         return super().create(vals)
 
@@ -205,18 +252,38 @@ class RecruitmentPlanningHeader(models.Model):
                 )
 
     # =========================================================
-    # CONSTRAINT UNIQUE YEAR / ENTITY
+    # CONSTRAINT DATES
     # =========================================================
 
-    @api.constrains('year', 'entity_id')
-    def _check_unique_year_entity(self):
+    @api.constrains('date_start', 'date_end')
+    def _check_dates(self):
         for record in self:
+            if (
+                record.date_start
+                and record.date_end
+                and record.date_end < record.date_start
+            ):
+                raise ValidationError(
+                    "La date de fin doit être supérieure "
+                    "ou égale à la date de début."
+                )
+
+    # =========================================================
+    # CONSTRAINT PROJECT / YEAR
+    # =========================================================
+
+    @api.constrains('year', 'project_id')
+    def _check_unique_year_project(self):
+        for record in self:
+
+            if not record.project_id:
+                continue
 
             existing = self.search(
                 [
                     ('id', '!=', record.id),
                     ('year', '=', record.year),
-                    ('entity_id', '=', record.entity_id.id),
+                    ('project_id', '=', record.project_id.id),
                     ('state', '!=', 'cancelled'),
                 ],
                 limit=1,
@@ -225,11 +292,11 @@ class RecruitmentPlanningHeader(models.Model):
             if existing:
                 raise ValidationError(
                     "Une planification existe déjà pour "
-                    "cette entité et cette année."
+                    "ce projet et cette année."
                 )
 
     # =========================================================
-    # WORKFLOW - DIRECTEUR
+    # WORKFLOW - SUBMIT TO RH
     # =========================================================
 
     def action_submit_rh(self):
@@ -252,7 +319,7 @@ class RecruitmentPlanningHeader(models.Model):
             })
 
     # =========================================================
-    # WORKFLOW - RH
+    # WORKFLOW - RH → DG
     # =========================================================
 
     def action_submit_dg(self):
@@ -263,15 +330,15 @@ class RecruitmentPlanningHeader(models.Model):
                     'Le planning doit être en contrôle RH.'
                 )
 
-            # Vérification des salaires
             for line in record.line_ids:
+
                 if line.estimated_salary <= 0:
                     raise ValidationError(
                         'Le salaire estimé doit être renseigné '
                         'par le RH pour toutes les lignes.'
                     )
 
-            record.sudo().write({
+            record.write({
                 'state': 'dg_validation',
             })
 
@@ -287,7 +354,7 @@ class RecruitmentPlanningHeader(models.Model):
                     'Le planning doit être en validation DG.'
                 )
 
-            record.sudo().write({
+            record.write({
                 'dg_validator_id': self.env.user.id,
                 'dg_validation_date': fields.Datetime.now(),
                 'state': 'drh_validation',
@@ -305,7 +372,7 @@ class RecruitmentPlanningHeader(models.Model):
                     'Le planning doit être en validation DRH.'
                 )
 
-            record.sudo().write({
+            record.write({
                 'drh_validator_id': self.env.user.id,
                 'drh_validation_date': fields.Datetime.now(),
                 'budget_validated': True,
@@ -324,7 +391,7 @@ class RecruitmentPlanningHeader(models.Model):
                     'Seul un planning actif peut être clôturé.'
                 )
 
-            record.sudo().write({
+            record.write({
                 'state': 'closed',
             })
 
@@ -340,6 +407,6 @@ class RecruitmentPlanningHeader(models.Model):
                     'Un planning clôturé ne peut pas être annulé.'
                 )
 
-            record.sudo().write({
+            record.write({
                 'state': 'cancelled',
             })

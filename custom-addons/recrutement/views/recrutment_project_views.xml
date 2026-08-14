@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <!-- ===================================================== -->
+    <!-- PROJECT LIST -->
+    <!-- ===================================================== -->
+
+    <record id="view_recruitment_project_list" model="ir.ui.view">
+
+        <field name="name">recruitment.project.list</field>
+        <field name="model">recruitment.project</field>
+
+        <field name="arch" type="xml">
+
+            <list string="Projets de recrutement">
+
+                <field name="name"/>
+
+                <field name="owner_type"
+                       widget="badge"
+                       decoration-info="owner_type == 'chef_service'"
+                       decoration-primary="owner_type == 'directeur'"/>
+
+                <field name="chef_service_id"
+                       optional="show"/>
+
+                <field name="direction_id"
+                       optional="show"/>
+
+                <field name="director_id"/>
+
+                <field name="active"/>
+
+            </list>
+
+        </field>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- PROJECT FORM -->
+    <!-- ===================================================== -->
+
+    <record id="view_recruitment_project_form" model="ir.ui.view">
+
+        <field name="name">recruitment.project.form</field>
+        <field name="model">recruitment.project</field>
+
+        <field name="arch" type="xml">
+
+            <form string="Projet de recrutement">
+
+                <sheet>
+
+                    <div class="oe_title">
+
+                        <label for="name"/>
+
+                        <h1>
+                            <field name="name"
+                                   placeholder="Ex: Digitalisation RH"/>
+                        </h1>
+
+                    </div>
+
+
+                    <group>
+
+                        <group string="Informations générales">
+
+                            <field name="owner_type"/>
+
+                            <field name="description"/>
+
+                            <field name="active"/>
+
+                        </group>
+
+
+                        <group string="Responsabilité">
+
+                            <!-- CHEF DE SERVICE -->
+
+                            <field name="chef_service_id"
+                                   invisible="owner_type != 'chef_service'"/>
+
+                            <!-- DIRECTION -->
+
+                            <field name="direction_id"
+                                   invisible="owner_type != 'chef_service'"/>
+
+                            <!-- DIRECTEUR -->
+
+                            <field name="director_id"/>
+
+                        </group>
+
+                    </group>
+
+
+                </sheet>
+
+            </form>
+
+        </field>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- PROJECT SEARCH -->
+    <!-- ===================================================== -->
+
+    <record id="view_recruitment_project_search" model="ir.ui.view">
+
+        <field name="name">recruitment.project.search</field>
+        <field name="model">recruitment.project</field>
+
+        <field name="arch" type="xml">
+
+            <search string="Rechercher un projet">
+
+                <field name="name"/>
+
+                <field name="owner_type"/>
+
+                <field name="chef_service_id"/>
+
+                <field name="direction_id"/>
+
+                <field name="director_id"/>
+
+
+                <separator/>
+
+
+                <filter
+                    name="filter_chef_service"
+                    string="Chef de service"
+                    domain="[('owner_type', '=', 'chef_service')]"/>
+
+                <filter
+                    name="filter_directeur"
+                    string="Directeur"
+                    domain="[('owner_type', '=', 'directeur')]"/>
+
+                <filter
+                    name="filter_active"
+                    string="Actifs"
+                    domain="[('active', '=', True)]"/>
+
+                <filter
+                    name="filter_archived"
+                    string="Archivés"
+                    domain="[('active', '=', False)]"/>
+
+
+                <separator/>
+
+
+                <group string="Grouper par">
+
+                    <filter
+                        name="group_owner_type"
+                        string="Responsable"
+                        context="{'group_by': 'owner_type'}"/>
+
+                    <filter
+                        name="group_direction"
+                        string="Direction"
+                        context="{'group_by': 'direction_id'}"/>
+
+                    <filter
+                        name="group_director"
+                        string="Directeur"
+                        context="{'group_by': 'director_id'}"/>
+
+                </group>
+
+            </search>
+
+        </field>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- PROJECT ACTION -->
+    <!-- ===================================================== -->
+
+    <record id="action_recruitment_project"
+            model="ir.actions.act_window">
+
+        <field name="name">Projets</field>
+
+        <field name="res_model">recruitment.project</field>
+
+        <field name="view_mode">list,form</field>
+
+        <field name="search_view_id"
+               ref="view_recruitment_project_search"/>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- PROJECT MENU -->
+    <!-- ===================================================== -->
+
+    
+
+</odoo>

@@ -8,7 +8,9 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/sequences.xml',
-        'views/recruitment_planning_header_views.xml',
+        'views/recrutment_planning_header_views.xml',
+        'views/recrutment_direction_views.xml',
+        'views/recrutment_project_views.xml',
         'views/recruitment_menu.xml',
         
     ],

@@ -23,6 +23,26 @@
         action="action_recruitment_planning_header"
         sequence="10"/>
 
+
+    <menuitem
+        id="menu_recruitment_project"
+        name="Projets"
+        parent="menu_recruitment_root"
+        action="action_recruitment_project"
+        sequence="20"/>
+
+
+    <!-- ===================================================== -->
+    <!-- DIRECTIONS -->
+    <!-- ===================================================== -->
+
+    <menuitem
+        id="menu_recruitment_direction"
+        name="Directions"
+        parent="menu_recruitment_root"
+        action="action_recruitment_direction"
+        sequence="30"/>    
+
     
     
 
