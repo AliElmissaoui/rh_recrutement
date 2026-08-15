@@ -12,6 +12,7 @@
         'views/recrutment_direction_views.xml',
         'views/recrutment_project_views.xml',
         'views/recruitment_menu.xml',
+        'wizard/recruitment_planning_return_wizard_views.xml',
         
     ],
     "installable": True,

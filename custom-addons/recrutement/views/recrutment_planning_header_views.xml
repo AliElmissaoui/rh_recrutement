@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <odoo>
 
     <!-- ===================================================== -->
@@ -57,74 +56,117 @@
                 <!-- HEADER -->
                 <!-- ================================================= -->
 
-                <header>
+    <header>
 
-                    <field name="state"
-                           widget="statusbar"
-                           statusbar_visible="draft,rh_review,dg_validation,drh_validation,active,closed"/>
-
-
-                    <!-- DIRECTEUR D'ENTITÉ -->
-
-                    <button name="action_submit_rh"
-                            string="Soumettre au RH"
-                            type="object"
-                            class="btn-primary"
-                            groups="recrutement.group_recruitment_directeur_entite"
-                            invisible="state != 'draft'"/>
+          <field name="state"
+           widget="statusbar"
+           statusbar_visible="draft,rh_review,drh_validation,dg_validation,active,closed"/>
 
 
-                    <!-- RH -->
+         <!-- ===================================================== -->
+         <!-- DIRECTEUR D'ENTITÉ -->
+         <!-- ===================================================== -->
 
-                    <button name="action_submit_dg"
-                            string="Soumettre au DG"
-                            type="object"
-                            class="btn-primary"
-                            groups="recrutement.group_recruitment_rh"
-                            invisible="state != 'rh_review'"/>
+         <button name="action_submit_rh"
+            string="Soumettre au RH"
+            type="object"
+            class="btn-primary"
+            groups="recrutement.group_recruitment_directeur_entite"
+            invisible="state != 'draft'"/>
 
+          <!-- ===================================================== -->
+          <!-- director -->
+          <!-- ===================================================== -->
+        <button name="action_validate_director"
+        string="Valider Directeur"
+        type="object"
+        class="btn-primary"
+        groups="recrutement.group_recruitment_directeur_entite"
+        invisible="state != 'director_validation'"/>
+          <!-- ===================================================== -->
+          <!-- RH -->
+          <!-- ===================================================== -->
 
-                    <!-- DG -->
-
-                    <button name="action_validate_dg"
-                            string="Valider DG"
-                            type="object"
-                            class="btn-primary"
-                            groups="recrutement.group_recruitment_dg"
-                            invisible="state != 'dg_validation'"/>
-
-
-                    <!-- DRH -->
-
-                    <button name="action_validate_drh"
-                            string="Valider DRH"
-                            type="object"
-                            class="btn-primary"
-                            groups="recrutement.group_recruitment_drh"
-                            invisible="state != 'drh_validation'"/>
-
-
-                    <!-- CLOSE -->
-
-                    <button name="action_close"
-                            string="Clôturer"
-                            type="object"
-                            class="btn-secondary"
-                            groups="recrutement.group_recruitment_drh,recrutement.group_recruitment_dg"
-                            invisible="state != 'active'"/>
+           <button name="action_submit_drh"
+            string="Soumettre au DRH"
+            type="object"
+            class="btn-primary"
+            groups="recrutement.group_recruitment_rh"
+            invisible="state != 'rh_review'"/>
 
 
-                    <!-- CANCEL -->
+         <!-- ===================================================== -->
+         <!-- DRH -->
+         <!-- ===================================================== -->
 
-                    <button name="action_cancel"
-                            string="Annuler"
-                            type="object"
-                            class="btn-secondary"
-                            groups="recrutement.group_recruitment_directeur_entite,recrutement.group_recruitment_rh"
-                            invisible="state in ['closed','cancelled']"
-                            confirm="Êtes-vous sûr de vouloir annuler cette planification ?"/>
+          <button name="action_validate_drh"
+            string="Valider DRH"
+            type="object"
+            class="btn-primary"
+            groups="recrutement.group_recruitment_drh"
+            invisible="state != 'drh_validation'"/>
 
-                </header>
+
+        <!-- ===================================================== -->
+        <!-- DG -->
+        <!-- ===================================================== -->
+
+        <button name="action_validate_dg"
+            string="Valider DG"
+            type="object"
+            class="btn-primary"
+            groups="recrutement.group_recruitment_dg"
+            invisible="state != 'dg_validation'"/>
+
+
+          <!-- ===================================================== -->
+          <!-- CLOSE -->
+          <!-- ===================================================== -->
+
+          <button name="action_close"
+            string="Clôturer"
+            type="object"
+            class="btn-secondary"
+            groups="recrutement.group_recruitment_drh,recrutement.group_recruitment_dg"
+            invisible="state != 'active'"/>
+
+
+           <!-- ===================================================== -->
+           <!-- RETOUR RH -->
+           <!-- ===================================================== -->
+
+       <button name="action_return"
+        string="Retour"
+        type="object"
+        class="btn-secondary"
+        groups="recrutement.group_recruitment_rh"
+        invisible="state != 'rh_review'"/>
+
+
+<!-- ===================================================== -->
+<!-- RETOUR DRH -->
+<!-- ===================================================== -->
+
+     <button name="action_return"
+        string="Retour"
+        type="object"
+        class="btn-secondary"
+        groups="recrutement.group_recruitment_drh"
+        invisible="state != 'drh_validation'"/>
+
+
+     <!-- ===================================================== -->
+     <!-- RETOUR DG -->
+     <!-- ===================================================== -->
+
+     <button name="action_return"
+        string="Retour"
+        type="object"
+        class="btn-secondary"
+        groups="recrutement.group_recruitment_dg"
+        invisible="state != 'dg_validation'"/>
+
+        </header>
 
 
                 <!-- ================================================= -->
@@ -166,24 +208,16 @@
 
                         </group>
 
-                        <group string="Projet">
+                               <group string="Informations générales">
 
-    <field name="project_id"/>
+                                <field name="created_by_id"/>
 
-    <field name="owner_type"/>
+                                <field name="project_id"
+                                   domain="[('user_id', 'in', [uid])]"/>
 
-    <field name="chef_service_id"
-           readonly="1"
-           invisible="owner_type != 'chef_service'"/>
+                                <field name="director_id"/>
 
-    <field name="direction_id"
-           readonly="1"
-           invisible="owner_type != 'chef_service'"/>
-
-    <field name="director_id"
-           readonly="1"/>
-
-</group>
+                        </group>
 
 
                         <group string="Budget">
@@ -301,6 +335,7 @@
                     </notebook>
 
                 </sheet>
+                <chatter/>
 
             </form>
 
