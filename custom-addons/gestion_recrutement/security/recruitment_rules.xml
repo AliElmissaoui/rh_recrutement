@@ -1,0 +1,171 @@
+<odoo>
+
+<record id="rule_recruitment_planning_chef_service"
+        model="ir.rule">
+
+    <field name="name">
+        Planifications - Chef de service
+    </field>
+
+    <field name="model_id"
+           ref="model_recruitment_planning_header"/>
+
+    <field name="groups"
+           eval="[
+               (4, ref('gestion_recrutement.group_recruitment_chef_service'))
+           ]"/>
+
+    <field name="domain_force">
+        [('created_by_id', '=', user.id)]
+    </field>
+
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_unlink" eval="0"/>
+
+</record>
+
+
+<!-- ===================================================== -->
+<!-- DIRECTEUR D'ENTITÉ -->
+<!-- ===================================================== -->
+
+<record id="rule_recruitment_planning_directeur"
+        model="ir.rule">
+
+    <field name="name">
+        Planifications - Directeur d'entité
+    </field>
+
+    <field name="model_id"
+           ref="model_recruitment_planning_header"/>
+
+    <field name="groups"
+           eval="[
+               (4, ref('gestion_recrutement.group_recruitment_directeur_entite'))
+           ]"/>
+
+    <field name="domain_force">
+        [('director_id', '=', user.id)]
+    </field>
+
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_unlink" eval="0"/>
+
+</record>
+
+
+<!-- ===================================================== -->
+<!-- RH -->
+<!-- ===================================================== -->
+
+<record id="rule_recruitment_planning_rh"
+        model="ir.rule">
+
+    <field name="name">Planifications - RH</field>
+
+    <field name="model_id"
+           ref="model_recruitment_planning_header"/>
+
+    <field name="groups"
+           eval="[
+               (4, ref('gestion_recrutement.group_recruitment_rh'))
+           ]"/>
+
+    <field name="domain_force">
+        [
+            ('state', 'in', [
+                'rh_review',
+                'drh_validation',
+                'dg_validation',
+                'active',
+                'closed',
+                'cancelled'
+            ])
+        ]
+    </field>
+
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="0"/>
+    <field name="perm_unlink" eval="0"/>
+
+</record>
+
+
+<!-- ===================================================== -->
+<!-- DRH -->
+<!-- ===================================================== -->
+
+<record id="rule_recruitment_planning_drh"
+        model="ir.rule">
+
+    <field name="name">Planifications - DRH</field>
+
+    <field name="model_id"
+           ref="model_recruitment_planning_header"/>
+
+    <field name="groups"
+           eval="[
+               (4, ref('gestion_recrutement.group_recruitment_drh'))
+           ]"/>
+
+    <field name="domain_force">
+        [
+            ('state', 'in', [
+                'drh_validation',
+                'dg_validation',
+                'active',
+                'closed',
+                'cancelled'
+            ])
+        ]
+    </field>
+
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="0"/>
+    <field name="perm_unlink" eval="0"/>
+
+</record>
+
+
+<!-- ===================================================== -->
+<!-- DG -->
+<!-- ===================================================== -->
+
+<record id="rule_recruitment_planning_dg"
+        model="ir.rule">
+
+    <field name="name">Planifications - DG</field>
+
+    <field name="model_id"
+           ref="model_recruitment_planning_header"/>
+
+    <field name="groups"
+           eval="[
+               (4, ref('gestion_recrutement.group_recruitment_dg'))
+           ]"/>
+
+    <field name="domain_force">
+        [
+            ('state', 'in', [
+                'dg_validation',
+                'active',
+                'closed',
+                'cancelled'
+            ])
+        ]
+    </field>
+
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="0"/>
+    <field name="perm_unlink" eval="0"/>
+
+</record>
+
+</odoo>

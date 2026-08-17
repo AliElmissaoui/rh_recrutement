@@ -56,114 +56,137 @@
                 <!-- HEADER -->
                 <!-- ================================================= -->
 
-    <header>
+        <header>
 
-          <field name="state"
-           widget="statusbar"
-           statusbar_visible="draft,rh_review,drh_validation,dg_validation,active,closed"/>
+           <field name="state"
+       widget="statusbar"
+       statusbar_visible="draft,director_validation,rh_review,drh_validation,dg_validation,active,closed"/>
 
 
-         <!-- ===================================================== -->
-         <!-- DIRECTEUR D'ENTITÉ -->
-         <!-- ===================================================== -->
+<!-- ===================================================== -->
+<!-- CHEF SERVICE → DIRECTEUR -->
+<!-- ===================================================== -->
 
-         <button name="action_submit_rh"
-            string="Soumettre au RH"
-            type="object"
-            class="btn-primary"
-            groups="recrutement.group_recruitment_directeur_entite"
-            invisible="state != 'draft'"/>
+<button name="action_submit_director"
+        string="Soumettre au Directeur"
+        type="object"
+        class="btn-primary"
+        groups="gestion_recrutement.group_recruitment_chef_service"
+        invisible="state != 'draft'"/>
 
-          <!-- ===================================================== -->
-          <!-- director -->
-          <!-- ===================================================== -->
-        <button name="action_validate_director"
+
+<!-- ===================================================== -->
+<!-- DIRECTEUR → RH -->
+<!-- ===================================================== -->
+
+<button name="action_submit_rh"
+        string="Soumettre au RH"
+        type="object"
+        class="btn-primary"
+        groups="gestion_recrutement.group_recruitment_directeur_entite"
+        invisible="state != 'draft'"/>
+
+
+       
+
+
+<!-- ===================================================== -->
+<!-- DIRECTEUR VALIDATION -->
+<!-- ===================================================== -->
+
+<button name="action_validate_director"
         string="Valider Directeur"
         type="object"
         class="btn-primary"
-        groups="recrutement.group_recruitment_directeur_entite"
+        groups="gestion_recrutement.group_recruitment_directeur_entite"
         invisible="state != 'director_validation'"/>
-          <!-- ===================================================== -->
-          <!-- RH -->
-          <!-- ===================================================== -->
-
-           <button name="action_submit_drh"
-            string="Soumettre au DRH"
-            type="object"
-            class="btn-primary"
-            groups="recrutement.group_recruitment_rh"
-            invisible="state != 'rh_review'"/>
 
 
-         <!-- ===================================================== -->
-         <!-- DRH -->
-         <!-- ===================================================== -->
+<!-- ===================================================== -->
+<!-- RH → DRH -->
+<!-- ===================================================== -->
 
-          <button name="action_validate_drh"
-            string="Valider DRH"
-            type="object"
-            class="btn-primary"
-            groups="recrutement.group_recruitment_drh"
-            invisible="state != 'drh_validation'"/>
-
-
-        <!-- ===================================================== -->
-        <!-- DG -->
-        <!-- ===================================================== -->
-
-        <button name="action_validate_dg"
-            string="Valider DG"
-            type="object"
-            class="btn-primary"
-            groups="recrutement.group_recruitment_dg"
-            invisible="state != 'dg_validation'"/>
+<button name="action_submit_drh"
+        string="Soumettre au DRH"
+        type="object"
+        class="btn-primary"
+        groups="gestion_recrutement.group_recruitment_rh"
+        invisible="state != 'rh_review'"/>
 
 
-          <!-- ===================================================== -->
-          <!-- CLOSE -->
-          <!-- ===================================================== -->
+<!-- ===================================================== -->
+<!-- DRH → DG -->
+<!-- ===================================================== -->
 
-          <button name="action_close"
-            string="Clôturer"
-            type="object"
-            class="btn-secondary"
-            groups="recrutement.group_recruitment_drh,recrutement.group_recruitment_dg"
-            invisible="state != 'active'"/>
+<button name="action_validate_drh"
+        string="Valider DRH"
+        type="object"
+        class="btn-primary"
+        groups="gestion_recrutement.group_recruitment_drh"
+        invisible="state != 'drh_validation'"/>
 
 
-           <!-- ===================================================== -->
-           <!-- RETOUR RH -->
-           <!-- ===================================================== -->
+<!-- ===================================================== -->
+<!-- DG → ACTIVE -->
+<!-- ===================================================== -->
 
-       <button name="action_return"
+<button name="action_validate_dg"
+        string="Valider DG"
+        type="object"
+        class="btn-primary"
+        groups="gestion_recrutement.group_recruitment_dg"
+        invisible="state != 'dg_validation'"/>
+
+
+    <!-- ===================================================== -->
+    <!-- RETOUR DRH -->
+    <!-- ===================================================== -->
+
+       <!-- ===================================================== -->
+<!-- RETOUR RH -->
+<!-- ===================================================== -->
+
+    <button name="action_return"
         string="Retour"
         type="object"
         class="btn-secondary"
-        groups="recrutement.group_recruitment_rh"
+        groups="gestion_recrutement.group_recruitment_rh"
         invisible="state != 'rh_review'"/>
+
+
+<!-- ===================================================== -->
+<!-- RETOUR DIRECTEUR -->
+<!-- ===================================================== -->
+
+    <button name="action_return"
+        string="Retour"
+        type="object"
+        class="btn-secondary"
+        groups="gestion_recrutement.group_recruitment_directeur_entite"
+        invisible="state != 'director_validation'"/>
 
 
 <!-- ===================================================== -->
 <!-- RETOUR DRH -->
 <!-- ===================================================== -->
 
-     <button name="action_return"
+    <button name="action_return"
         string="Retour"
         type="object"
         class="btn-secondary"
-        groups="recrutement.group_recruitment_drh"
+        groups="gestion_recrutement.group_recruitment_drh"
         invisible="state != 'drh_validation'"/>
 
 
-     <!-- ===================================================== -->
-     <!-- RETOUR DG -->
-     <!-- ===================================================== -->
+<!-- ===================================================== -->
+<!-- RETOUR DG -->
+<!-- ===================================================== -->
 
-     <button name="action_return"
+    <button name="action_return"
         string="Retour"
         type="object"
+        groups="gestion_recrutement.group_recruitment_dg"
         class="btn-secondary"
-        groups="recrutement.group_recruitment_dg"
         invisible="state != 'dg_validation'"/>
 
         </header>
@@ -183,8 +206,8 @@
 
                         <h1>
 
-                            <field name="name"
-                                   placeholder="Ex: Planification recrutement 2027"/>
+                            <field name="name" readonly="state not in ['draft', 'director_validation']"
+                                   />
 
                         </h1>
 
@@ -202,7 +225,7 @@
                             <field name="ref"
                                    readonly="1"/>
 
-                            <field name="year"/>
+                            <field name="year" readonly="state not in ['draft', 'director_validation']"/>
 
                            
 
@@ -210,10 +233,12 @@
 
                                <group string="Informations générales">
 
-                                <field name="created_by_id"/>
-
+                                <field name="created_by_id" readonly="1"/>
+                                <field name="created_by_role" readonly="1"/>
                                 <field name="project_id"
-                                   domain="[('user_id', 'in', [uid])]"/>
+                                  domain="[('user_id', 'in', [uid])]" 
+                                   readonly="state not in ['draft', 'director_validation']"
+                                 />
 
                                 <field name="director_id"/>
 
@@ -251,34 +276,34 @@
 
                         <page string="Postes planifiés">
 
-                            <field name="line_ids"
-                                    context="{'default_header_id': id}">
+                           <field name="line_ids"
+                              context="{'default_header_id': id}"
+                              >
 
                         <list editable="bottom">
+                            <field name="planning_state" column_invisible="1"/>
 
                         <field name="sequence"
                widget="handle"/>
 
-        <field name="job_id"/>
+        <field name="job" readonly="planning_state not in ['draft', 'director_validation']"/>
 
-        <field name="department_id"/>
+        <field name="planned_qty" readonly="planning_state not in ['draft', 'director_validation']"/>
 
-        <field name="planned_qty"/>
-
-        <field name="date_previsionnelle"/>
+        <field name="date_previsionnelle" readonly="planning_state not in ['draft', 'director_validation']" />
 
         <field name="estimated_salary"
-               groups="recrutement.group_recruitment_rh"/>
+               groups="gestion_recrutement.group_recruitment_rh"/>
 
         <field name="salary_currency_id"
-               groups="recrutement.group_recruitment_rh"
+               groups="gestion_recrutement.group_recruitment_rh"
                readonly="1"/>
 
         <field name="annual_salary_cost"
-               groups="recrutement.group_recruitment_rh"
+               groups="gestion_recrutement.group_recruitment_rh"
                readonly="1"/>
 
-        <field name="note"/>
+        <field name="note" readonly="planning_state not in ['draft', 'director_validation']"/>
 
     </list>
 

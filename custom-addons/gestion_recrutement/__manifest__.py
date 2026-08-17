@@ -7,13 +7,14 @@
     "data": [
         'security/security.xml',
         'security/ir.model.access.csv',
+        'security/recruitment_rules.xml',
         'data/sequences.xml',
         'views/recrutment_planning_header_views.xml',
         'views/recrutment_direction_views.xml',
         'views/recrutment_project_views.xml',
+        'views/recruitment_users_views.xml',
         'views/recruitment_menu.xml',
         'wizard/recruitment_planning_return_wizard_views.xml',
-        
     ],
     "installable": True,
     "application": True,

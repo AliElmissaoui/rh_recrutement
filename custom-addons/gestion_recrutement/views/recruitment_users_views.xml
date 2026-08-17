@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_users_recruitment_groups"
+            model="ir.ui.view">
+
+        <field name="name">
+            res.users.list.recruitment.groups
+        </field>
+
+        <field name="model">res.users</field>
+           
+        
+
+        <field name="inherit_id" ref="base.view_users_tree"/>
+
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='name']" position="after">
+
+                <field name="recruitment_group_ids"
+                       widget="many2many_tags"
+                       string="Rôle Recrutement"
+                       readonly="1"/>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+</odoo>

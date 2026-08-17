@@ -1,0 +1,21 @@
+{
+    "directions": [
+        {
+            "name": "Direction IT",
+            "director_email": "admin@admin.com"
+        }
+    ],
+    "projects": [
+        {
+            "name": "Projet Directeur",
+            "code": "DIR-001",
+            "user_email": "admin@admin.com"
+        },
+        {
+            "name": "Projet Chef Service",
+            "code": "CHEF-001",
+            "user_email": "ali@capep.co.ma",
+            "direction": "Direction IT"
+        }
+    ]
+}
