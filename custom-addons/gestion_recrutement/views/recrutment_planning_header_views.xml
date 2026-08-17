@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ===================================================== -->
+    <!-- LIST -->
+    <!-- ===================================================== -->
+
+    <record id="view_recruitment_planning_header_list"
+            model="ir.ui.view">
+
+        <field name="name">recruitment.planning.header.list</field>
+        <field name="model">recruitment.planning.header</field>
+
+        <field name="arch" type="xml">
+
+            <list string="Planifications de recrutement">
+
+                <field name="ref"/>
+                <field name="name"/>
+                <field name="year"/>
+                <field name="director_id"/>
+                <field name="total_planned"/>
+                <field name="annual_salary_cost"/>
+                <field name="currency_id"/>
+
+                <field name="state"
+                       widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'rh_review'"
+                       decoration-success="state == 'active'"
+                       decoration-muted="state == 'closed'"
+                       decoration-danger="state == 'cancelled'"/>
+
+            </list>
+
+        </field>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- FORM -->
+    <!-- ===================================================== -->
+
+    <record id="view_recruitment_planning_header_form"
+            model="ir.ui.view">
+
+        <field name="name">recruitment.planning.header.form</field>
+        <field name="model">recruitment.planning.header</field>
+
+        <field name="arch" type="xml">
+
+            <form string="Planification de recrutement">
+
+                <!-- ================================================= -->
+                <!-- HEADER -->
+                <!-- ================================================= -->
+
+        <header>
+
+           <field name="state"
+       widget="statusbar"
+       statusbar_visible="draft,director_validation,rh_review,drh_validation,dg_validation,active,closed"/>
+
+
+<!-- ===================================================== -->
+<!-- CHEF SERVICE → DIRECTEUR -->
+<!-- ===================================================== -->
+
+<button name="action_submit_director"
+        string="Soumettre au Directeur"
+        type="object"
+        class="btn-primary"
+        groups="recrutement.group_recruitment_chef_service"
+        invisible="state != 'draft'"/>
+
+
+<!-- ===================================================== -->
+<!-- DIRECTEUR → RH -->
+<!-- ===================================================== -->
+
+<button name="action_submit_rh"
+        string="Soumettre au RH"
+        type="object"
+        class="btn-primary"
+        groups="recrutement.group_recruitment_directeur_entite"
+        invisible="state != 'draft'"/>
+
+
+       
+
+
+<!-- ===================================================== -->
+<!-- DIRECTEUR VALIDATION -->
+<!-- ===================================================== -->
+
+<button name="action_validate_director"
+        string="Valider Directeur"
+        type="object"
+        class="btn-primary"
+        groups="recrutement.group_recruitment_directeur_entite"
+        invisible="state != 'director_validation'"/>
+
+
+<!-- ===================================================== -->
+<!-- RH → DRH -->
+<!-- ===================================================== -->
+
+<button name="action_submit_drh"
+        string="Soumettre au DRH"
+        type="object"
+        class="btn-primary"
+        groups="recrutement.group_recruitment_rh"
+        invisible="state != 'rh_review'"/>
+
+
+<!-- ===================================================== -->
+<!-- DRH → DG -->
+<!-- ===================================================== -->
+
+<button name="action_validate_drh"
+        string="Valider DRH"
+        type="object"
+        class="btn-primary"
+        groups="recrutement.group_recruitment_drh"
+        invisible="state != 'drh_validation'"/>
+
+
+<!-- ===================================================== -->
+<!-- DG → ACTIVE -->
+<!-- ===================================================== -->
+
+<button name="action_validate_dg"
+        string="Valider DG"
+        type="object"
+        class="btn-primary"
+        groups="recrutement.group_recruitment_dg"
+        invisible="state != 'dg_validation'"/>
+
+
+    <!-- ===================================================== -->
+    <!-- RETOUR DRH -->
+    <!-- ===================================================== -->
+
+       <!-- ===================================================== -->
+<!-- RETOUR RH -->
+<!-- ===================================================== -->
+
+    <button name="action_return"
+        string="Retour"
+        type="object"
+        class="btn-secondary"
+        groups="recrutement.group_recruitment_rh"
+        invisible="state != 'rh_review'"/>
+
+
+<!-- ===================================================== -->
+<!-- RETOUR DIRECTEUR -->
+<!-- ===================================================== -->
+
+    <button name="action_return"
+        string="Retour"
+        type="object"
+        class="btn-secondary"
+        groups="recrutement.group_recruitment_directeur_entite"
+        invisible="state != 'director_validation'"/>
+
+
+<!-- ===================================================== -->
+<!-- RETOUR DRH -->
+<!-- ===================================================== -->
+
+    <button name="action_return"
+        string="Retour"
+        type="object"
+        class="btn-secondary"
+        groups="recrutement.group_recruitment_drh"
+        invisible="state != 'drh_validation'"/>
+
+
+<!-- ===================================================== -->
+<!-- RETOUR DG -->
+<!-- ===================================================== -->
+
+    <button name="action_return"
+        string="Retour"
+        type="object"
+        groups="recrutement.group_recruitment_dg"
+        class="btn-secondary"
+        invisible="state != 'dg_validation'"/>
+
+        </header>
+
+
+                <!-- ================================================= -->
+                <!-- SHEET -->
+                <!-- ================================================= -->
+
+                <sheet>
+
+                    <!-- TITLE -->
+
+                    <div class="oe_title">
+
+                        <label for="name"/>
+
+                        <h1>
+
+                            <field name="name" readonly="state not in ['draft', 'director_validation']"
+                                   />
+
+                        </h1>
+
+                    </div>
+
+
+                    <!-- ================================================= -->
+                    <!-- GENERAL -->
+                    <!-- ================================================= -->
+
+                    <group>
+
+                        <group string="Informations générales">
+
+                            <field name="ref"
+                                   readonly="1"/>
+
+                            <field name="year" readonly="state not in ['draft', 'director_validation']"/>
+
+                           
+
+                        </group>
+
+                               <group string="Informations générales">
+
+                                <field name="created_by_id" readonly="1"/>
+                                <field name="created_by_role" readonly="1"/>
+                                <field name="project_id"
+                                  domain="[('user_id', 'in', [uid])]" 
+                                   readonly="state not in ['draft', 'director_validation']"
+                                 />
+
+                                <field name="director_id"/>
+
+                        </group>
+
+
+                        <group string="Budget">
+
+                            <field name="total_planned"
+                                   readonly="1"/>
+
+                            <field name="annual_salary_cost"
+                                   readonly="1"/>
+
+                            <field name="currency_id"
+                                   readonly="1"/>
+
+                            <field name="budget_validated"
+                                   readonly="1"/>
+
+                        </group>
+
+                    </group>
+
+
+                    <!-- ================================================= -->
+                    <!-- NOTEBOOK -->
+                    <!-- ================================================= -->
+
+                    <notebook>
+
+                        <!-- ================================================= -->
+                        <!-- POSTES PLANIFIÉS -->
+                        <!-- ================================================= -->
+
+                        <page string="Postes planifiés">
+
+                           <field name="line_ids"
+                              context="{'default_header_id': id}"
+                              >
+
+                        <list editable="bottom">
+                            <field name="planning_state" column_invisible="1"/>
+
+                        <field name="sequence"
+               widget="handle"/>
+
+        <field name="job" readonly="planning_state not in ['draft', 'director_validation']"/>
+
+        <field name="planned_qty" readonly="planning_state not in ['draft', 'director_validation']"/>
+
+        <field name="date_previsionnelle" readonly="planning_state not in ['draft', 'director_validation']" />
+
+        <field name="estimated_salary"
+               groups="recrutement.group_recruitment_rh"/>
+
+        <field name="salary_currency_id"
+               groups="recrutement.group_recruitment_rh"
+               readonly="1"/>
+
+        <field name="annual_salary_cost"
+               groups="recrutement.group_recruitment_rh"
+               readonly="1"/>
+
+        <field name="note" readonly="planning_state not in ['draft', 'director_validation']"/>
+
+    </list>
+
+          </field>
+
+                        </page>
+
+
+                        <!-- ================================================= -->
+                        <!-- VALIDATIONS -->
+                        <!-- ================================================= -->
+
+                        <page string="Validations">
+
+                            <group>
+
+                                <group string="Validation DG">
+
+                                    <field name="dg_validator_id"
+                                           readonly="1"/>
+
+                                    <field name="dg_validation_date"
+                                           readonly="1"/>
+
+                                </group>
+
+
+                                <group string="Validation DRH">
+
+                                    <field name="drh_validator_id"
+                                           readonly="1"/>
+
+                                    <field name="drh_validation_date"
+                                           readonly="1"/>
+
+                                </group>
+
+                            </group>
+
+                        </page>
+
+
+                        <!-- ================================================= -->
+                        <!-- NOTES -->
+                        <!-- ================================================= -->
+
+                        <page string="Notes">
+
+                            <field name="note"
+                                   placeholder="Ajouter une note..."/>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+                <chatter/>
+
+            </form>
+
+        </field>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- SEARCH -->
+    <!-- ===================================================== -->
+
+    <record id="view_recruitment_planning_header_search"
+            model="ir.ui.view">
+
+        <field name="name">recruitment.planning.header.search</field>
+        <field name="model">recruitment.planning.header</field>
+
+        <field name="arch" type="xml">
+
+            <search string="Rechercher une planification">
+
+                <field name="ref"/>
+                <field name="name"/>
+                <field name="year"/>
+                <field name="director_id"/>
+                <field name="state"/>
+
+
+                <separator/>
+
+
+                <filter name="filter_draft"
+                        string="Brouillon"
+                        domain="[('state', '=', 'draft')]"/>
+
+                <filter name="filter_rh"
+                        string="Contrôle RH"
+                        domain="[('state', '=', 'rh_review')]"/>
+
+                <filter name="filter_dg"
+                        string="Validation DG"
+                        domain="[('state', '=', 'dg_validation')]"/>
+
+                <filter name="filter_drh"
+                        string="Validation DRH"
+                        domain="[('state', '=', 'drh_validation')]"/>
+
+                <filter name="filter_active"
+                        string="Active"
+                        domain="[('state', '=', 'active')]"/>
+
+                <filter name="filter_closed"
+                        string="Clôturée"
+                        domain="[('state', '=', 'closed')]"/>
+
+                <filter name="filter_cancelled"
+                        string="Annulée"
+                        domain="[('state', '=', 'cancelled')]"/>
+
+
+                <separator/>
+
+
+                <group string="Grouper par">
+
+                    <filter name="group_year"
+                            string="Année"
+                            context="{'group_by': 'year'}"/>
+
+                    
+
+                    <filter name="group_state"
+                            string="État"
+                            context="{'group_by': 'state'}"/>
+
+                </group>
+
+            </search>
+
+        </field>
+
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- ACTION -->
+    <!-- ===================================================== -->
+
+    <record id="action_recruitment_planning_header"
+            model="ir.actions.act_window">
+
+        <field name="name">Planifications</field>
+
+        <field name="res_model">recruitment.planning.header</field>
+
+        <field name="view_mode">list,form</field>
+
+        <field name="search_view_id"
+               ref="view_recruitment_planning_header_search"/>
+
+    </record>
+
+
+</odoo>

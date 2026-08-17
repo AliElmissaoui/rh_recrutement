@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <!-- ===================================================== -->
+    <!-- PROJECT  -->
+    <!-- ===================================================== -->
+
+    <record id="view_recruitment_project_list" model="ir.ui.view">
+        <field name="name">recruitment.project.list</field>
+        <field name="model">recruitment.project</field>
+        <field name="arch" type="xml">
+
+            <list string="Projets">
+
+                <field name="code"/>
+                <field name="name"/>
+                <field name="direction_id"/>
+                <field name="active"/>
+
+            </list>
+
+        </field>
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- PROJECT FORM -->
+    <!-- ===================================================== -->
+
+    <record id="view_recruitment_project_form" model="ir.ui.view">
+        <field name="name">recruitment.project.form</field>
+        <field name="model">recruitment.project</field>
+        <field name="arch" type="xml">
+
+            <form string="Projet">
+
+                <sheet>
+
+                    <group>
+
+                        <group>
+
+                            <field name="name"/>
+                            <field name="code"/>
+
+                        </group>
+
+                        <group>
+
+                            <field name="direction_id"/>
+
+                            <field name="user_id" widget="many2many_tags"/>
+                                   
+
+                            <field name="active"/>
+
+                        </group>
+
+                    </group>
+
+                </sheet>
+
+            </form>
+
+        </field>
+    </record>
+
+
+    <!-- ===================================================== -->
+    <!-- ACTION -->
+    <!-- ===================================================== -->
+
+    <record id="action_recruitment_project"
+            model="ir.actions.act_window">
+
+        <field name="name">Projets</field>
+        <field name="res_model">recruitment.project</field>
+        <field name="view_mode">list,form</field>
+
+    </record>
+
+
+  
+
+    
+
+</odoo>
