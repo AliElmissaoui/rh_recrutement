@@ -61,14 +61,8 @@ class RecruitmentPlanningReturnWizard(models.TransientModel):
     # =====================================================
 
      if current_state == 'rh_review':
-
-        # Planning créé par le Directeur :
-        # RH → Brouillon
         if planning.created_by_role == 'directeur':
             previous_state = 'draft'
-
-        # Planning créé par le Chef de service :
-        # RH → Directeur
         elif planning.created_by_role == 'chef_service':
             previous_state = 'director_validation'
 
@@ -79,18 +73,12 @@ class RecruitmentPlanningReturnWizard(models.TransientModel):
             )
 
      elif current_state == 'director_validation':
-
-        # Directeur → Chef de service
         previous_state = 'draft'
 
      elif current_state == 'drh_validation':
-
-        # DRH → RH
         previous_state = 'rh_review'
 
      elif current_state == 'dg_validation':
-
-        # DG → DRH
         previous_state = 'drh_validation'
 
      else:
@@ -99,15 +87,11 @@ class RecruitmentPlanningReturnWizard(models.TransientModel):
             'depuis son état actuel.'
         )
 
-    # =====================================================
-    # SECURITY
-    # =====================================================
-
     # RH
      if current_state == 'rh_review':
 
         if not self.env.user.has_group(
-            'recrutement.group_recruitment_rh'
+            'gestion_recrutement.group_recruitment_rh'
         ):
             raise AccessError(
                 'Seul le RH peut retourner cette planification.'
@@ -117,7 +101,7 @@ class RecruitmentPlanningReturnWizard(models.TransientModel):
      elif current_state == 'director_validation':
 
         if not self.env.user.has_group(
-            'recrutement.group_recruitment_directeur_entite'
+            'gestion_recrutement.group_recruitment_directeur_entite'
         ):
             raise AccessError(
                 'Seul le Directeur d’entité peut retourner '
@@ -134,7 +118,7 @@ class RecruitmentPlanningReturnWizard(models.TransientModel):
      elif current_state == 'drh_validation':
 
         if not self.env.user.has_group(
-            'recrutement.group_recruitment_drh'
+            'gestion_recrutement.group_recruitment_drh'
         ):
             raise AccessError(
                 'Seul le DRH peut retourner cette planification.'
@@ -144,7 +128,7 @@ class RecruitmentPlanningReturnWizard(models.TransientModel):
      elif current_state == 'dg_validation':
 
         if not self.env.user.has_group(
-            'recrutement.group_recruitment_dg'
+            'gestion_recrutement.group_recruitment_dg'
         ):
             raise AccessError(
                 'Seul le DG peut retourner cette planification.'
@@ -183,15 +167,15 @@ class RecruitmentPlanningReturnWizard(models.TransientModel):
     # MESSAGE CHATTER
     # =====================================================
 
-    #  planning.message_post(
-    #     body=message,
-    #     subtype_xmlid='mail.mt_note',
-    # )
+     planning.message_post(
+        body=message,
+        subtype_xmlid='mail.mt_note',
+    )
 
      return {
-        'type': 'ir.actions.act_window',
-        'res_model': 'recruitment.planning.header',
-        'res_id': planning.id,
-        'view_mode': 'form',
-        'target': 'current',
-    }
+    'type': 'ir.actions.act_window',
+    'name': 'Planifications de recrutement',
+    'res_model': 'recruitment.planning.header',
+    'view_mode': 'list',
+    'target': 'current',
+   }

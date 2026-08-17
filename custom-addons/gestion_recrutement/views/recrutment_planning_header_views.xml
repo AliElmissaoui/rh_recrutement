@@ -71,7 +71,7 @@
         string="Soumettre au Directeur"
         type="object"
         class="btn-primary"
-        groups="recrutement.group_recruitment_chef_service"
+        groups="gestion_recrutement.group_recruitment_chef_service"
         invisible="state != 'draft'"/>
 
 
@@ -83,7 +83,7 @@
         string="Soumettre au RH"
         type="object"
         class="btn-primary"
-        groups="recrutement.group_recruitment_directeur_entite"
+        groups="gestion_recrutement.group_recruitment_directeur_entite"
         invisible="state != 'draft'"/>
 
 
@@ -98,7 +98,7 @@
         string="Valider Directeur"
         type="object"
         class="btn-primary"
-        groups="recrutement.group_recruitment_directeur_entite"
+        groups="gestion_recrutement.group_recruitment_directeur_entite"
         invisible="state != 'director_validation'"/>
 
 
@@ -110,7 +110,7 @@
         string="Soumettre au DRH"
         type="object"
         class="btn-primary"
-        groups="recrutement.group_recruitment_rh"
+        groups="gestion_recrutement.group_recruitment_rh"
         invisible="state != 'rh_review'"/>
 
 
@@ -122,7 +122,7 @@
         string="Valider DRH"
         type="object"
         class="btn-primary"
-        groups="recrutement.group_recruitment_drh"
+        groups="gestion_recrutement.group_recruitment_drh"
         invisible="state != 'drh_validation'"/>
 
 
@@ -134,7 +134,7 @@
         string="Valider DG"
         type="object"
         class="btn-primary"
-        groups="recrutement.group_recruitment_dg"
+        groups="gestion_recrutement.group_recruitment_dg"
         invisible="state != 'dg_validation'"/>
 
 
@@ -150,7 +150,7 @@
         string="Retour"
         type="object"
         class="btn-secondary"
-        groups="recrutement.group_recruitment_rh"
+        groups="gestion_recrutement.group_recruitment_rh"
         invisible="state != 'rh_review'"/>
 
 
@@ -162,7 +162,7 @@
         string="Retour"
         type="object"
         class="btn-secondary"
-        groups="recrutement.group_recruitment_directeur_entite"
+        groups="gestion_recrutement.group_recruitment_directeur_entite"
         invisible="state != 'director_validation'"/>
 
 
@@ -174,7 +174,7 @@
         string="Retour"
         type="object"
         class="btn-secondary"
-        groups="recrutement.group_recruitment_drh"
+        groups="gestion_recrutement.group_recruitment_drh"
         invisible="state != 'drh_validation'"/>
 
 
@@ -185,7 +185,7 @@
     <button name="action_return"
         string="Retour"
         type="object"
-        groups="recrutement.group_recruitment_dg"
+        groups="gestion_recrutement.group_recruitment_dg"
         class="btn-secondary"
         invisible="state != 'dg_validation'"/>
 
@@ -293,14 +293,14 @@
         <field name="date_previsionnelle" readonly="planning_state not in ['draft', 'director_validation']" />
 
         <field name="estimated_salary"
-               groups="recrutement.group_recruitment_rh"/>
+               groups="gestion_recrutement.group_recruitment_rh"/>
 
         <field name="salary_currency_id"
-               groups="recrutement.group_recruitment_rh"
+               groups="gestion_recrutement.group_recruitment_rh"
                readonly="1"/>
 
         <field name="annual_salary_cost"
-               groups="recrutement.group_recruitment_rh"
+               groups="gestion_recrutement.group_recruitment_rh"
                readonly="1"/>
 
         <field name="note" readonly="planning_state not in ['draft', 'director_validation']"/>

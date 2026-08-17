@@ -81,7 +81,7 @@ class RecruitmentPlanningLine(models.Model):
 
         # RH uniquement
         if self.env.user.has_group(
-            'recrutement.group_recruitment_rh'
+            'gestion_recrutement.group_recruitment_rh'
         ):
 
             # Champs que RH a le droit de modifier
@@ -116,9 +116,6 @@ class RecruitmentPlanningLine(models.Model):
                 * 12
             )
 
-    # =========================================================
-    # CONSTRAINT
-    # =========================================================
 
     @api.constrains('planned_qty')
     def _check_planned_qty(self):

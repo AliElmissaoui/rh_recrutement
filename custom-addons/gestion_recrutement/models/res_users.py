@@ -14,7 +14,7 @@ class ResUsers(models.Model):
     def _compute_recruitment_groups(self):
 
         recruitment_category = self.env.ref(
-            'recrutement.module_category_recruitment',
+            'gestion_recrutement.module_category_recruitment',
             raise_if_not_found=False,
         )
 

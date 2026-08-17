@@ -17,7 +17,6 @@ class RecruitmentProject(models.Model):
     direction_id = fields.Many2one(
         'recruitment.direction',
         string='Direction',
-        required=True,
         ondelete='restrict',
     )
 

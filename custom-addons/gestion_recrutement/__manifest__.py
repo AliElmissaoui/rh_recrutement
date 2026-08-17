@@ -15,8 +15,6 @@
         'views/recruitment_users_views.xml',
         'views/recruitment_menu.xml',
         'wizard/recruitment_planning_return_wizard_views.xml',
-        
-        
     ],
     "installable": True,
     "application": True,

@@ -68,7 +68,7 @@ class RecruitmentPlanningHeader(models.Model):
         default=lambda self: (
         self.env.user
         if self.env.user.has_group(
-            'recrutement.group_recruitment_directeur_entite'
+            'gestion_recrutement.group_recruitment_directeur_entite'
         )
         else False
         ),
@@ -217,40 +217,30 @@ class RecruitmentPlanningHeader(models.Model):
         # -----------------------------------------------------
 
         if user.has_group(
-            'recrutement.group_recruitment_directeur_entite'
+            'gestion_recrutement.group_recruitment_directeur_entite'
         ):
-            # Le directeur est lui-même le responsable
             return user
-
         # -----------------------------------------------------
         # 2. CHEF DE SERVICE
         # -----------------------------------------------------
 
         if user.has_group(
-            'recrutement.group_recruitment_chef_service'
+            'gestion_recrutement.group_recruitment_chef_service'
         ):
-
-            # Le projet doit avoir une direction
             if not project.direction_id:
                 raise ValidationError(
                     "Le projet sélectionné n'est associé "
                     "à aucune direction."
                 )
-
-            # La direction doit avoir un directeur
             if not project.direction_id.director_id:
                 raise ValidationError(
                     "La direction du projet ne possède "
                     "aucun directeur d'entité."
                 )
-
-            # Project -> Direction -> Directeur
             return project.direction_id.director_id
-
         # -----------------------------------------------------
         # 3. USER SANS RÔLE
         # -----------------------------------------------------
-
         raise AccessError(
             "Votre utilisateur ne possède aucun rôle "
             "autorisé pour créer une planification."
@@ -259,9 +249,7 @@ class RecruitmentPlanningHeader(models.Model):
     # =========================================================
     # CHECK PROJECT ACCESS
     # =========================================================
-
     def _check_project_access(self, project):
-
         if self.env.user not in project.user_id:
             raise AccessError(
                 "Vous n'êtes pas autorisé à utiliser "
@@ -271,36 +259,27 @@ class RecruitmentPlanningHeader(models.Model):
     # =========================================================
     # ONCHANGE PROJECT
     # =========================================================
-
     @api.onchange('project_id')
     def _onchange_project_id(self):
-
     # -----------------------------------------------------
     # DIRECTEUR D'ENTITÉ
     # -----------------------------------------------------
-
      if self.env.user.has_group(
-        'recrutement.group_recruitment_directeur_entite'
+        'gestion_recrutement.group_recruitment_directeur_entite'
      ):
         self.director_id = self.env.user
         return
-
     # -----------------------------------------------------
     # CHEF DE SERVICE
     # -----------------------------------------------------
-
      if self.env.user.has_group(
-        'recrutement.group_recruitment_chef_service'
+        'gestion_recrutement.group_recruitment_chef_service'
      ):
-
         if not self.project_id:
             self.director_id = False
             return
-
-        # Project sans Direction
         if not self.project_id.direction_id:
             self.director_id = False
-
             return {
                 'warning': {
                     'title': 'Attention',
@@ -311,7 +290,6 @@ class RecruitmentPlanningHeader(models.Model):
                 }
             }
 
-        # Direction sans Directeur
         if not self.project_id.direction_id.director_id:
             self.director_id = False
 
@@ -324,8 +302,6 @@ class RecruitmentPlanningHeader(models.Model):
                     ),
                 }
             }
-
-        # Project → Direction → Directeur
         self.director_id = (
             self.project_id.direction_id.director_id
         )
@@ -346,7 +322,7 @@ class RecruitmentPlanningHeader(models.Model):
     # =====================================================
 
      if user.has_group(
-        'recrutement.group_recruitment_directeur_entite'
+        'gestion_recrutement.group_recruitment_directeur_entite'
     ):
 
         vals.update({
@@ -360,7 +336,7 @@ class RecruitmentPlanningHeader(models.Model):
     # =====================================================
 
      elif user.has_group(
-        'recrutement.group_recruitment_chef_service'
+        'gestion_recrutement.group_recruitment_chef_service'
     ):
 
         project_id = vals.get('project_id')
@@ -378,8 +354,6 @@ class RecruitmentPlanningHeader(models.Model):
             raise ValidationError(
                 "Le projet sélectionné n'existe pas."
             )
-
-        # Vérifier accès au projet
         if user not in project.user_id:
             raise AccessError(
                 "Vous n'êtes pas autorisé à utiliser "
@@ -431,13 +405,7 @@ class RecruitmentPlanningHeader(models.Model):
     # =========================================================
 
     def write(self, vals):
-
         vals = dict(vals)
-
-        # -----------------------------------------------------
-        # INTERDIRE MODIFICATION MANUELLE DIRECTOR
-        # -----------------------------------------------------
-
         if (
             'director_id' in vals
             and not self.env.context.get(
@@ -448,28 +416,17 @@ class RecruitmentPlanningHeader(models.Model):
                 "Le directeur d'entité est déterminé "
                 "automatiquement par le système."
             )
-
-        # -----------------------------------------------------
-        # PROJECT CHANGED
-        # -----------------------------------------------------
-
         if 'project_id' in vals:
-
             project = self.env[
                 'recruitment.project'
             ].browse(
                 vals['project_id']
             ).exists()
-
             if not project:
                 raise ValidationError(
                     "Le projet sélectionné n'existe pas."
                 )
-
-            # Vérifier accès
             self._check_project_access(project)
-
-            # Recalculer le directeur
             director = self._get_planning_director(
                 project
             )
@@ -494,9 +451,7 @@ class RecruitmentPlanningHeader(models.Model):
         'line_ids.annual_salary_cost',
     )
     def _compute_totals(self):
-
         for record in self:
-
             record.total_planned = sum(
                 record.line_ids.mapped(
                     'planned_qty'
@@ -518,20 +473,16 @@ class RecruitmentPlanningHeader(models.Model):
       for record in self:
         if not record.year:
             continue
-
         if not record.year.isdigit() or len(record.year) != 4:
             raise ValidationError(
                 "L'année doit contenir exactement 4 chiffres. "
                 "Exemple : 2026."
             )
-
         year = int(record.year)
-
         if year < 2000 or year > 2100:
             raise ValidationError(
                 "L'année doit être comprise entre 2000 et 2100."
             )
-
      # =========================================================
      # WORKFLOW 1 : DIRECTEUR → RH
      # =========================================================
@@ -650,7 +601,7 @@ class RecruitmentPlanningHeader(models.Model):
      if self.state == 'rh_review':
 
         if not self.env.user.has_group(
-            'recrutement.group_recruitment_rh'
+            'gestion_recrutement.group_recruitment_rh'
         ):
             raise AccessError(
                 'Seul le RH peut retourner cette planification.'
@@ -659,7 +610,7 @@ class RecruitmentPlanningHeader(models.Model):
      elif self.state == 'director_validation':
 
         if not self.env.user.has_group(
-            'recrutement.group_recruitment_directeur_entite'
+            'gestion_recrutement.group_recruitment_directeur_entite'
         ):
             raise AccessError(
                 "Seul le Directeur d'entité peut retourner "
@@ -675,7 +626,7 @@ class RecruitmentPlanningHeader(models.Model):
         elif self.state == 'drh_validation':
 
          if not self.env.user.has_group(
-            'recrutement.group_recruitment_drh'
+            'gestion_recrutement.group_recruitment_drh'
         ):
             raise AccessError(
                 'Seul le DRH peut retourner cette planification.'
@@ -684,7 +635,7 @@ class RecruitmentPlanningHeader(models.Model):
      elif self.state == 'dg_validation':
 
         if not self.env.user.has_group(
-            'recrutement.group_recruitment_dg'
+            'gestion_recrutement.group_recruitment_dg'
         ):
             raise AccessError(
                 'Seul le DG peut retourner cette planification.'
@@ -700,7 +651,7 @@ class RecruitmentPlanningHeader(models.Model):
         'res_model': 'recruitment.planning.return.wizard',
         'view_mode': 'form',
         'view_id': self.env.ref(
-            'recrutement.view_recruitment_planning_return_wizard_form'
+            'gestion_recrutement.view_recruitment_planning_return_wizard_form'
         ).id,
         'target': 'new',
         'context': {
@@ -782,89 +733,4 @@ class RecruitmentPlanningHeader(models.Model):
 
 
 
-    # @api.model
-    # def create(self, vals):
-
-    #  user = self.env.user
-
-    # # ==========================================
-    # # DIRECTEUR
-    # # ==========================================
-
-    #  if user.has_group(
-    #     'recrutement.group_recruitment_directeur_entite'
-    # ):
-    #     vals.update({
-    #         'created_by_id': user.id,
-    #         'created_by_role': 'directeur',
-    #         'director_id': user.id,
-    #     })
-
-    # # ==========================================
-    # # CHEF DE SERVICE
-    # # ==========================================
-
-    #  elif user.has_group(
-    #     'recrutement.group_recruitment_chef_service'
-    #  ):
-    #     project_id = vals.get('project_id')
-
-    #     if not project_id:
-    #         raise ValidationError(
-    #             "Vous devez sélectionner un projet."
-    #         )
-
-    #     project = self.env[
-    #         'recruitment.project'
-    #     ].browse(project_id).exists()
-
-    #     if not project:
-    #         raise ValidationError(
-    #             "Le projet sélectionné n'existe pas."
-    #         )
-
-    #     # Le chef de service doit être autorisé
-    #     # sur le projet
-    #     if user not in project.user_id:
-    #         raise AccessError(
-    #             "Vous n'êtes pas autorisé à utiliser "
-    #             "ce projet."
-    #         )
-
-    #     if not project.direction_id:
-    #         raise ValidationError(
-    #             "Le projet n'est associé à aucune direction."
-    #         )
-
-    #     if not project.direction_id.director_id:
-    #         raise ValidationError(
-    #             "La direction du projet ne possède "
-    #             "aucun directeur d'entité."
-    #         )
-
-    #     vals.update({
-    #         'created_by_id': user.id,
-    #         'created_by_role': 'chef_service',
-    #         'director_id': project.direction_id.director_id.id,
-    #     })
-
-    #  else:
-    #      raise AccessError(
-    #         "Votre utilisateur ne possède aucun rôle "
-    #         "autorisé à créer une planification."
-    #     )
-
-    # # ==========================================
-    # # REFERENCE
-    # # ==========================================
-
-    #  if vals.get('ref', 'PLA') == 'PLA':
-    #     vals['ref'] = (
-    #         self.env[
-    #             'ir.sequence'
-    #         ].next_by_code(
-    #             'recruitment.planning.header'
-    #         ) or 'PLA'
-    #     )
-
-    #  return super().create(vals)
+    

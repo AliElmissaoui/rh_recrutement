@@ -1,73 +1,65 @@
 <odoo>
 
-    <!-- ===================================================== -->
-    <!-- CHEF DE SERVICE -->
-    <!-- يشوف غير les planifications اللي هو أنشأ -->
-    <!-- ===================================================== -->
+<record id="rule_recruitment_planning_chef_service"
+        model="ir.rule">
 
-    <record id="rule_recruitment_planning_chef_service"
-            model="ir.rule">
+    <field name="name">
+        Planifications - Chef de service
+    </field>
 
-        <field name="name">
-            Planifications - Chef de service
-        </field>
+    <field name="model_id"
+           ref="model_recruitment_planning_header"/>
 
-        <field name="model_id"
-               ref="model_recruitment_planning_header"/>
+    <field name="groups"
+           eval="[
+               (4, ref('gestion_recrutement.group_recruitment_chef_service'))
+           ]"/>
 
-        <field name="groups"
-               eval="[
-                   (4, ref('recrutement.group_recruitment_chef_service'))
-               ]"/>
+    <field name="domain_force">
+        [('created_by_id', '=', user.id)]
+    </field>
 
-        <field name="domain_force">
-            [('created_by_id', '=', user.id)]
-        </field>
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_unlink" eval="0"/>
 
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="0"/>
-
-    </record>
+</record>
 
 
-    <!-- ===================================================== -->
-    <!-- DIRECTEUR D'ENTITÉ -->
-    <!-- يشوف planning ديالو + planning ديال chefs service -->
-    <!-- التابعين ليه -->
-    <!-- ===================================================== -->
+<!-- ===================================================== -->
+<!-- DIRECTEUR D'ENTITÉ -->
+<!-- ===================================================== -->
 
-    <record id="rule_recruitment_planning_directeur"
-            model="ir.rule">
+<record id="rule_recruitment_planning_directeur"
+        model="ir.rule">
 
-        <field name="name">
-            Planifications - Directeur d'entité
-        </field>
+    <field name="name">
+        Planifications - Directeur d'entité
+    </field>
 
-        <field name="model_id"
-               ref="model_recruitment_planning_header"/>
+    <field name="model_id"
+           ref="model_recruitment_planning_header"/>
 
-        <field name="groups"
-               eval="[
-                   (4, ref('recrutement.group_recruitment_directeur_entite'))
-               ]"/>
+    <field name="groups"
+           eval="[
+               (4, ref('gestion_recrutement.group_recruitment_directeur_entite'))
+           ]"/>
 
-        <field name="domain_force">
-            [('director_id', '=', user.id)]
-        </field>
+    <field name="domain_force">
+        [('director_id', '=', user.id)]
+    </field>
 
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="0"/>
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_unlink" eval="0"/>
 
-    </record>
+</record>
 
 
-    <!-- ===================================================== -->
+<!-- ===================================================== -->
 <!-- RH -->
-<!-- يشوف planning اللي وصلات لـ RH وما بعد -->
 <!-- ===================================================== -->
 
 <record id="rule_recruitment_planning_rh"
@@ -79,7 +71,9 @@
            ref="model_recruitment_planning_header"/>
 
     <field name="groups"
-           eval="[(4, ref('recrutement.group_recruitment_rh'))]"/>
+           eval="[
+               (4, ref('gestion_recrutement.group_recruitment_rh'))
+           ]"/>
 
     <field name="domain_force">
         [
@@ -104,7 +98,6 @@
 
 <!-- ===================================================== -->
 <!-- DRH -->
-<!-- يشوف planning من مرحلة DRH وما بعد -->
 <!-- ===================================================== -->
 
 <record id="rule_recruitment_planning_drh"
@@ -116,7 +109,9 @@
            ref="model_recruitment_planning_header"/>
 
     <field name="groups"
-           eval="[(4, ref('recrutement.group_recruitment_drh'))]"/>
+           eval="[
+               (4, ref('gestion_recrutement.group_recruitment_drh'))
+           ]"/>
 
     <field name="domain_force">
         [
@@ -140,7 +135,6 @@
 
 <!-- ===================================================== -->
 <!-- DG -->
-<!-- يشوف planning من مرحلة DG وما بعد -->
 <!-- ===================================================== -->
 
 <record id="rule_recruitment_planning_dg"
@@ -152,7 +146,9 @@
            ref="model_recruitment_planning_header"/>
 
     <field name="groups"
-           eval="[(4, ref('recrutement.group_recruitment_dg'))]"/>
+           eval="[
+               (4, ref('gestion_recrutement.group_recruitment_dg'))
+           ]"/>
 
     <field name="domain_force">
         [
